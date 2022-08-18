@@ -127,3 +127,15 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# dataset
+dataset_v1/
+
+# misc
+*.vec
+*.h5
+*.sav
+
+# checkpoint
+Tacotron2/fullbody/
+Tacotron2/upperbody/
