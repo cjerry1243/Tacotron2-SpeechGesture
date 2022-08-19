@@ -3,7 +3,6 @@ import h5py
 import librosa
 import os
 import io
-import nltk
 import string
 from tqdm import tqdm
 from sklearn.pipeline import Pipeline
