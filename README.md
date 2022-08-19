@@ -40,16 +40,16 @@ dataset_v1/
 
 - Remove line number 6 in val_metadata.csv (val_2022_v1_005) because the audio is completely silent.
 
-2. Download and unzip the word embedding from FastText. Put the file "crawl-300d-2M.vec" under this repository.
+2. Download and unzip the [word embedding](https://dl.fbaipublicfiles.com/fasttext/vectors-english/crawl-300d-2M.vec.zip) from FastText. Put the file "crawl-300d-2M.vec" under the project directory.
 
 3. Preprocess the data and save them as h5 files. (This might take a while) 
 ```
 python process_data.py -d path_to_your_dataset_v1 
 ```
 
-By default, the three h5 files (trn_v1.h5, val_v1.h5, and tst_v1.h5) should be generated.
+By default, the three h5 files (trn_v1.h5, val_v1.h5, and tst_v1.h5) should be generated under the project directory.
 
-Alternatively, you can simply download our processed data.
+Alternatively, you can simply [download](https://drive.google.com/drive/folders/1KW_cN_1pL9KgQxQyyYUATAlgA0CcX9LZ?usp=sharing) our processed data.
 
 4. Create motion processing pipelines
 ```
@@ -58,7 +58,7 @@ python create_pipeline.py
 
 
 ## Test
-Download and unzip the checkpoints. Put the "fullbody" and "upperbody" folders under Tacotron2/ 
+Download and unzip the [checkpoints](https://drive.google.com/drive/folders/1RNpXTMVmx36PmCESQlVFo-ez9C7oDN5R?usp=sharing). Put the "fullbody" and "upperbody" folders under Tacotron2/ 
 
 Navigate to Tacotron2/ folder.
 ```
@@ -78,7 +78,7 @@ python generate_all_gestures.py -ch upperbody/ckpt/checkpoint_22000.pt -t upper
 The bvh files should be generated under "Tacotron2/outputs/" folder. By defaut, the cuda device "0" is used. If you prefer to use a different cuda device for inference, please edit line 23 in the Tacotron2/common/hparams.py
 
 Note: 
-To visualize the bvh files, please reach out to the repository provided by GENEA Challenge 2022.
+To visualize the bvh files, please reach out to the [repository](https://github.com/TeoNikolov/genea_visualizer) provided by GENEA Challenge 2022. It provides the visualization of the motions in Blender.
 
 ## Train 
 TBD
