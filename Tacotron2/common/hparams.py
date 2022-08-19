@@ -20,7 +20,7 @@ def create_hparams(**kwargs):
         "checkpoint_path": 'tst-vel-large-upperbody57/ckpt/checkpoint_22000.pt',
         "warm_start": False,
         "n_gpus": 1,  # Number of GPUs
-        "device": 2,
+        "device": 0,
 
 
         ################################

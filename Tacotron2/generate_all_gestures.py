@@ -21,10 +21,12 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-f', "--h5file", type=str, default="../tst_v1.h5")
 parser.add_argument('-ch', "--checkpoint_path", type=str, required=True)
 parser.add_argument('-o', "--output_dir", type=str, default="outputs")
-parser.add_argument('-p', "--pipeline", default="../pipeline_expmap_full.sav", type=str)
+parser.add_argument('-t', "--track", type=str, default="full", help="The track for the bvh files. Can only be either 'full' or 'upper'")
+# parser.add_argument('-p', "--pipeline", default="../pipeline_expmap_full.sav", type=str)
 # parser.add_argument('-p', "--pipeline", default="../pipeline_expmap_upper.sav", type=str)
 args = parser.parse_args()
 
+print("Predicting {} body motion.".format(args.track))
 
 hparams = create_hparams()
 torch.cuda.set_device("cuda:{}".format(hparams.device))
@@ -35,6 +37,12 @@ torch.cuda.manual_seed(hparams.seed)
 configname = args.checkpoint_path.split("/")[0]
 args.output_dir = os.path.join(args.output_dir, configname)
 os.makedirs(args.output_dir, exist_ok=True)
+
+if args.track == "full":
+	hparams.n_acoustic_feat_dims = 78
+else:
+	hparams.n_acoustic_feat_dims = 57
+
 
 ### Load Tacotron2 Model
 model = Tacotron2(hparams)
@@ -73,12 +81,11 @@ for index in tqdm(range(len(h5.keys()))):
 		predicted_gesture = predicted_gesture.squeeze(0).transpose(0, 1).cpu().detach().numpy()
 
 	# todo: convert to bvh and save to output folder
-	pipeline = jl.load(args.pipeline)
 	predicted_gesture = savgol_filter(predicted_gesture, 9, 3, axis=0)
 	# print(predicted_gesture.shape)
 	# exit()
 	
-	if predicted_gesture.shape[-1] == 78:
+	if args.track == "full":
 		predicted_gesture[:, 21:24] = np.mean(predicted_gesture[:, 21:24], axis=0)
 		predicted_gesture[:, 27] = np.clip(predicted_gesture[:, 27], -9999, 0.6)
 		predicted_gesture[:, 39] = np.clip(predicted_gesture[:, 39], -9999, -2.0)
@@ -87,12 +94,15 @@ for index in tqdm(range(len(h5.keys()))):
 		predicted_gesture[:, 45] = np.clip(predicted_gesture[:, 45], -9999, 0.6)
 		predicted_gesture[:, 12] = np.clip(predicted_gesture[:, 12], -9999, 1.4)
 		predicted_gesture[:, 3] = np.clip(predicted_gesture[:, 3], -9999, 1.4)
+		pipeline = jl.load("../pipeline_expmap_full.sav")
+
 	else:
 		predicted_gesture[:, 21-18:24-18] = np.mean(predicted_gesture[:, 21-18:24-18], axis=0)
 		predicted_gesture[:, 27-18] = np.clip(predicted_gesture[:, 27-18], -9999, 0.6)
 		predicted_gesture[:, 39-18:42-18] = np.mean(predicted_gesture[:, 39-18:42-18], axis=0)
 		predicted_gesture[:, 45-18] = np.clip(predicted_gesture[:, 45-18], -9999, 0.6)
-	
+		pipeline = jl.load("../pipeline_expmap_upper.sav")
+
 	bvh_data = pipeline.inverse_transform([predicted_gesture])[0]
 	writer = BVHWriter()
 	with open(os.path.join(args.output_dir, "{}-{:03d}.bvh".format(configname, index)), 'w') as f:
