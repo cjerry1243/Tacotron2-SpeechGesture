@@ -84,10 +84,17 @@ python generate_all_gestures.py -ch upperbody/ckpt/checkpoint_22000.pt -t upper
 The bvh files should be generated under "Tacotron2/outputs/" folder. By defaut, the cuda device "0" is used. If you prefer to use a different cuda device for inference, please edit line 23 in the Tacotron2/common/hparams.py
 
 Note: 
-To visualize the bvh files, please reach out to the [repository](https://github.com/TeoNikolov/genea_visualizer) provided by GENEA Challenge 2022. It provides the visualization of the motions in Blender.
+You can import the bvh files to Blender to visualize the gesture motions. 
+If you would like to render the motions, please reach out to the [repository](https://github.com/TeoNikolov/genea_visualizer) provided by GENEA Challenge 2022. 
 
-## Train 
-TBD
+## Train  
+Edit the configurations in Tacotron2/common/hparams.py. Enter the "output_directory" and "device" of your own choice. Add the "checkpoint_path" if you would like to resume training. Make sure to edit "n_acoustic_feat_dims", 78 for full body and 57 for upper body. Then train the model using the following command:
+```
+cd Tacotron2
+python train_genea22.py
+```
+
+The weights and logs can be found under the "output_directory".
 
 ## Citation 
 Please cite our paper if you use our code.

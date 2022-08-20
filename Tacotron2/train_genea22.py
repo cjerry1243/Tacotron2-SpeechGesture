@@ -8,13 +8,12 @@ import torch
 from common.model import Tacotron2
 from common.logger import Tacotron2Logger
 from common.hparams import create_hparams
-# from common.hparams_small import create_hparams
 from torch.utils.data import DataLoader
 from common.loss_function import Tacotron2Loss
 
 
 class SpeechGestureDataset_Genea22(torch.utils.data.Dataset):
-    def __init__(self, h5file1, h5file2=None, sequence_length=300, npy_root=".."):
+    def __init__(self, h5file1, h5file2=None, sequence_length=300, npy_root="..", motion_dim=78):
         self.h5 = h5py.File(h5file1, "r")
         self.len = len(self.h5.keys())
         mel_mean = np.load(os.path.join(npy_root, "mel_mean.npy"))
@@ -23,32 +22,23 @@ class SpeechGestureDataset_Genea22(torch.utils.data.Dataset):
         mfcc_std = np.load(os.path.join(npy_root, "mfcc_std.npy"))
         prosody_mean = np.load(os.path.join(npy_root, "prosody_mean.npy"))
         prosody_std = np.load(os.path.join(npy_root, "prosody_std.npy"))
-        # motion_mean = np.load(os.path.join(npy_root, "expmap_full_mean.npy"))
-        # motion_std = np.load(os.path.join(npy_root, "expmap_full_std.npy"))
 
         ### Normalized audio feature
         self.mel = [(self.h5[str(i)]["audio"]["melspectrogram"][:] - mel_mean) / mel_std
                     for i in range(self.len)]
-        # self.mfcc = [(self.h5[str(i)]["audio"]["mfcc"][:] - mfcc_mean) / mfcc_std
-        #              for i in range(self.len)]
         self.mfcc = [np.zeros_like((self.h5[str(i)]["audio"]["mfcc"][:] - mfcc_mean) / mfcc_std)
                      for i in range(self.len)]
-        # self.prosody = [(self.h5[str(i)]["audio"]["prosody"][:] - prosody_mean) / prosody_std
-        #                 for i in range(self.len)]
         self.prosody = [np.zeros_like((self.h5[str(i)]["audio"]["prosody"][:] - prosody_mean) / prosody_std)
                         for i in range(self.len)]
 
-        ### Unnormalized audio feature
-        # self.mel = [self.h5[str(i)]["audio"]["melspectrogram"][:] for i in range(self.len)]
-        # self.mfcc = [self.h5[str(i)]["audio"]["mfcc"][:] for i in range(self.len)]
-        # self.prosody = [self.h5[str(i)]["audio"]["prosody"][:] for i in range(self.len)]
-
         self.speaker_id = [self.h5[str(i)]["speaker_id"][:] for i in range(len(self.h5.keys()))]
         self.text = [self.h5[str(i)]["text"][:] for i in range(len(self.h5.keys()))]
-        self.motion = [self.h5[str(i)]["motion"]["expmap_upper"][:, :]
-                       for i in range(len(self.h5.keys()))]
-        # self.motion = [self.h5[str(i)]["motion"]["expmap_full"][:, :]
-        #                for i in range(len(self.h5.keys()))] # remove the bodyworld positions
+        if motion_dim == 57:
+            self.motion = [self.h5[str(i)]["motion"]["expmap_upper"][:, :]
+                        for i in range(len(self.h5.keys()))]
+        else:
+            self.motion = [self.h5[str(i)]["motion"]["expmap_full"][:, :]
+                        for i in range(len(self.h5.keys()))] 
         self.h5.close()
 
         if h5file2 is not None:
@@ -58,26 +48,19 @@ class SpeechGestureDataset_Genea22(torch.utils.data.Dataset):
             ### Normalized audio feature
             self.mel += [(self.h5[str(i)]["audio"]["melspectrogram"][:] - mel_mean) / mel_std
                         for i in range(self.len)]
-            # self.mfcc += [(self.h5[str(i)]["audio"]["mfcc"][:] - mfcc_mean) / mfcc_std
-            #              for i in range(self.len)]
             self.mfcc += [np.zeros_like((self.h5[str(i)]["audio"]["mfcc"][:] - mfcc_mean) / mfcc_std)
                          for i in range(self.len)]
-            # self.prosody += [(self.h5[str(i)]["audio"]["prosody"][:] - prosody_mean) / prosody_std
-            #                 for i in range(self.len)]
             self.prosody += [np.zeros_like((self.h5[str(i)]["audio"]["prosody"][:] - prosody_mean) / prosody_std)
                             for i in range(self.len)]
 
-            ### Unnormalized audio feature
-            # self.mel += [self.h5[str(i)]["audio"]["melspectrogram"][:] for i in range(self.len)]
-            # self.mfcc += [self.h5[str(i)]["audio"]["mfcc"][:] for i in range(self.len)]
-            # self.prosody += [self.h5[str(i)]["audio"]["prosody"][:] for i in range(self.len)]
-
             self.speaker_id += [self.h5[str(i)]["speaker_id"][:] for i in range(len(self.h5.keys()))]
             self.text += [self.h5[str(i)]["text"][:] for i in range(len(self.h5.keys()))]
-            self.motion += [self.h5[str(i)]["motion"]["expmap_upper"][:, :]
-                           for i in range(len(self.h5.keys()))]
-            # self.motion += [self.h5[str(i)]["motion"]["expmap_full"][:, :]
-            #                for i in range(len(self.h5.keys()))]  # remove the bodyworld positions
+            if motion_dim == 57:
+                self.motion += [self.h5[str(i)]["motion"]["expmap_upper"][:, :]
+                            for i in range(len(self.h5.keys()))]
+            else:
+                self.motion += [self.h5[str(i)]["motion"]["expmap_full"][:, :]
+                            for i in range(len(self.h5.keys()))] 
             self.h5.close()
 
         print("Total clips:", len(self.motion))
@@ -85,7 +68,6 @@ class SpeechGestureDataset_Genea22(torch.utils.data.Dataset):
         self.mfcc_dim = mfcc_mean.shape[0]
         self.prosody_dim = prosody_mean.shape[0]
         self.audio_dim = mel_mean.shape[0] + mfcc_mean.shape[0] + prosody_mean.shape[0]
-        # self.audio_dim = mel_mean.shape[0] + prosody_mean.shape[0]
         self.segment_length = sequence_length
 
     def __len__(self):
@@ -98,7 +80,6 @@ class SpeechGestureDataset_Genea22(torch.utils.data.Dataset):
         mel = self.mel[idx][start_frame:end_frame]
         mfcc = self.mfcc[idx][start_frame:end_frame]
         prosody = self.prosody[idx][start_frame:end_frame]
-        # audio = np.concatenate((mel, prosody), axis=-1) # no mfcc setting
         audio = np.concatenate((mel, mfcc, prosody), axis=-1)
 
         speaker = np.zeros([self.segment_length, 17])
@@ -122,7 +103,6 @@ class SpeechGestureDataset_Genea22_ValSequence(SpeechGestureDataset_Genea22):
         mel = self.mel[idx][:]
         mfcc = self.mfcc[idx][:]
         prosody = self.prosody[idx][:]
-        # audio = np.concatenate((mel, prosody), axis=-1)
         audio = np.concatenate((mel, mfcc, prosody), axis=-1)
 
         speaker = np.zeros([total_frame_len, 17])
@@ -162,8 +142,8 @@ class SequentialSampler(torch.utils.data.Sampler):
 def prepare_dataloaders(hparams):
     # Get data, data loaders and collate function ready
     print("Loading dataset into memory ...")
-    dataset = SpeechGestureDataset_Genea22("../train_v1_unclipped.h5", "../val_v1_unclipped.h5")
-    val_dataset = SpeechGestureDataset_Genea22_ValSequence("../val_v1_unclipped.h5")
+    dataset = SpeechGestureDataset_Genea22("../trn_v1.h5", "../val_v1.h5", motion_dim=hparams.n_acoustic_feat_dims)
+    val_dataset = SpeechGestureDataset_Genea22_ValSequence("../val_v1.h5", motion_dim=hparams.n_acoustic_feat_dims)
 
     train_loader = DataLoader(dataset, num_workers=0,
                               sampler=RandomSampler(0, len(dataset)),
@@ -315,9 +295,6 @@ def train(output_directory, log_directory, checkpoint_path, warm_start, n_gpus,
             save_checkpoint(model, optimizer, learning_rate, iteration + 1, checkpoint_path)
 
         iteration += 1
-        # if iteration > 10000:
-        #     teacher_prob *= 0.9999
-        #     teacher_prob = max(teacher_prob, 0.8)
 
 
 if __name__ == '__main__':
