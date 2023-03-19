@@ -139,3 +139,5 @@ dataset_v1/
 # checkpoint
 Tacotron2/fullbody/
 Tacotron2/upperbody/
+
+vid/
