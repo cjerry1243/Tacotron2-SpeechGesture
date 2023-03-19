@@ -1,10 +1,10 @@
 # Tacotron2-SpeechGesture
-This is the official repository for our publication **"The IVI Lab entry to the GENEA Challenge 2022 – A Tacotron2 Based Method for Co-Speech Gesture Generation With Locality-Constraint Attention Mechanism."**
-[Paper](https://openreview.net/forum?id=gMTaia--AB2)
+This is the official repository for our [paper](https://openreview.net/forum?id=gMTaia--AB2) **"The IVI Lab entry to the GENEA Challenge 2022 – A Tacotron2 Based Method for Co-Speech Gesture Generation With Locality-Constraint Attention Mechanism."**
 
 This repository provides the code for model training and prediction using the data from [GENEA Challenge 2022](https://youngwoo-yoon.github.io/GENEAchallenge2022/).
 
-## Demonstration of Our Results
+## Demonstration of Our Results  
+https://user-images.githubusercontent.com/26675834/226152214-a4fc1b84-328b-4a22-828e-e8d2a69a2f89.mp4
 
 
 ## Environment
