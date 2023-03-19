@@ -3,10 +3,10 @@ This is the official repository for our [paper](https://openreview.net/forum?id=
 
 This repository provides the code for model training and prediction using the data from [GENEA Challenge 2022](https://youngwoo-yoon.github.io/GENEAchallenge2022/).
 
-## Demonstration of Our Results (Make sure the audio is on while playing!!) 
+## Demonstration of Our Results (make sure the audio is on while playing!!) 
 https://user-images.githubusercontent.com/26675834/226152214-a4fc1b84-328b-4a22-828e-e8d2a69a2f89.mp4
 
-(from tst_2022_v1_036.bvh)
+(from _tst_2022_v1_036.bvh_)
 
 ## Environment
 - Ubuntu 20.04
@@ -102,7 +102,7 @@ python train_genea22.py
 The weights and logs can be found under the "output_directory".
 
 ## Citation 
-Please cite our paper if you use our code.
+Please cite our paper if you find our code useful.
 ```
 @inproceedings{chang2022ivi,
   title={The IVI Lab entry to the GENEA Challenge 2022--A Tacotron2 based method for co-speech gesture generation with locality-constraint attention mechanism},
