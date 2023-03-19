@@ -23,9 +23,9 @@ This repository is only tested under the above environment and package settings.
 
 ## Data Processing
 ### Download GENEA22 Data
-Get the dataset (v1) from GENEA Challenge 2022 and unzip all files. Put the "dataset_v1" under this repository. Create a "tst" folder under the "dataset_v1" directory and put all test data inside.
+- Get the dataset (v1) from GENEA Challenge 2022 and unzip all files. Put the "dataset_v1" under this repository. Create a "tst" folder under the "dataset_v1" directory and put all test data inside.
 
-Your file hierarchy should look like this: 
+Your file hierarchy should look like the following: 
 ```
 dataset_v1/
     trn/
@@ -69,19 +69,19 @@ python create_pipeline.py
 ## Test
 We predict all gestures for both tracks (full and upper body) given the processed test data (tst_v1.h5).
 
-Download and unzip the [checkpoints](https://drive.google.com/drive/folders/1RNpXTMVmx36PmCESQlVFo-ez9C7oDN5R?usp=sharing). Put the "fullbody" and "upperbody" folders under Tacotron2/ 
+- Download and unzip the [checkpoints](https://drive.google.com/drive/folders/1RNpXTMVmx36PmCESQlVFo-ez9C7oDN5R?usp=sharing). Put the "fullbody" and "upperbody" folders under Tacotron2/ 
 
-Navigate to Tacotron2/ folder.
+- Navigate to Tacotron2/ folder.
 ```
 cd Tacotron2
 ```
 
-Predicting fullbody gestures: 
+- Predicting fullbody gestures: 
 ```
 python generate_all_gestures.py -ch fullbody/ckpt/checkpoint_21000.pt -t full
 ```
 
-Predicting upperbody gestures: 
+- Predicting upperbody gestures: 
 ```
 python generate_all_gestures.py -ch upperbody/ckpt/checkpoint_22000.pt -t upper
 ```
@@ -93,7 +93,15 @@ You can import the bvh files to Blender to visualize the gesture motions.
 If you would like to render the motions, please reach out to the [repository](https://github.com/TeoNikolov/genea_visualizer) provided by GENEA Challenge 2022. 
 
 ## Train  
-Edit the configurations in Tacotron2/common/hparams.py. Enter the "output_directory" and "device" of your own choice. Add the "checkpoint_path" if you would like to resume training. Make sure to edit "n_acoustic_feat_dims", 78 for full body and 57 for upper body. Then train the model using the following command:
+Edit the configurations in Tacotron2/common/hparams.py. 
+
+1. Enter the "output_directory" and "device" of your own choice. 
+
+2. Add the "checkpoint_path" if you would like to resume training. 
+
+3. Make sure to edit "n_acoustic_feat_dims", 78 for full body and 57 for upper body. 
+
+4. Then train the model using the following command:
 ```
 cd Tacotron2
 python train_genea22.py
