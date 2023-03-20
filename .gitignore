@@ -140,4 +140,6 @@ dataset_v1/
 Tacotron2/fullbody/
 Tacotron2/upperbody/
 
+Tacotron2/outputs/
+
 vid/
