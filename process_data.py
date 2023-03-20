@@ -302,7 +302,7 @@ if __name__ == "__main__":
     wavdir = os.path.join(dataroot, "wav")
     tsvdir = os.path.join(dataroot, "tsv")
     bvhdir = os.path.join(dataroot, "bvh")
-    metadata_path = os.path.join(dataroot, "{}_metadata.csv".format(dataset_type))
+    metadata_path = os.path.join(dataroot, "{}_2022_v1_metadata.csv".format(dataset_type))
     prepare_h5_unclipped(metadata_path, "{}_v1.h5".format(dataset_type))
 
     dataset_type = "val"
