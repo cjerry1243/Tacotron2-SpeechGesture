@@ -55,9 +55,14 @@ Preprocess the data and save them as h5 files. (This might take a while)
 python process_data.py -d path_to_your_dataset_v1 
 ```
 
-By default, the three h5 files (trn_v1.h5, val_v1.h5, and tst_v1.h5) should be generated under the project directory.
+By default, the three h5 files (_trn_v1.h5_, _val_v1.h5_, and _tst_v1.h5_) should be generated under the project directory.
 
 Alternatively, you can simply [download](https://drive.google.com/drive/folders/1KW_cN_1pL9KgQxQyyYUATAlgA0CcX9LZ?usp=sharing) our processed data.
+
+Calculate audio statistics based on _trn_v1.h5_:
+```
+python calculate_audio_statistics.py
+```
 
 ### Create Motion Processing Pipelines
 We will use the following command to generate pipelines (*.sav) for converting our motion representations to euler rotations.
