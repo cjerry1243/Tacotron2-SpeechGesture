@@ -135,7 +135,7 @@ dataset_v1/
 *.vec
 *.h5
 *.sav
-#*.npy
+*.npy
 
 # checkpoint
 Tacotron2/fullbody/
