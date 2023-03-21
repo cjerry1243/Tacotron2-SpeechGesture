@@ -140,7 +140,7 @@ dataset_v1/
 # checkpoint
 Tacotron2/fullbody/
 Tacotron2/upperbody/
-
 Tacotron2/outputs/
 
+GENEA_visualizer-minimal-v1/
 vid/
