@@ -112,7 +112,7 @@ cd Tacotron2
 python train_genea22.py
 ```
 
-The weights and logs can be found under the "output_directory".
+The weights and logs can be found under the "output_directory". It takes roughly 20k~30k iterations to produce decent results.
 
 ## Citation 
 Please cite our paper if you find our code useful.
