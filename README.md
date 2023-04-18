@@ -1,7 +1,9 @@
 # Tacotron2-SpeechGesture
 This is the official repository for our [paper](https://openreview.net/forum?id=gMTaia--AB2) **"The IVI Lab entry to the GENEA Challenge 2022 – A Tacotron2 Based Method for Co-Speech Gesture Generation With Locality-Constraint Attention Mechanism."**
 
-This repository provides the code for model training and prediction using the data from [GENEA Challenge 2022](https://youngwoo-yoon.github.io/GENEAchallenge2022/).
+This repository provides the code for co-speech gesture prediction using the data from [GENEA Challenge 2022](https://youngwoo-yoon.github.io/GENEAchallenge2022/).
+
+This repository also contain the implementation for [GENEA Challenge 2023](https://genea-workshop.github.io/2023/challenge/).
 
 ## Demonstration of Our Results (make sure the audio is on while playing!!) 
 https://user-images.githubusercontent.com/26675834/226152214-a4fc1b84-328b-4a22-828e-e8d2a69a2f89.mp4
@@ -43,8 +45,6 @@ dataset_v1/
         wav/*.wav
         tst_metadata.csv
 ```
-
-- Remove line number 6 in val_metadata.csv (val_2022_v1_005) because the audio is completely silent.
 
 ### FastText Word Embeddings
 Download and unzip the [word embedding](https://dl.fbaipublicfiles.com/fasttext/vectors-english/crawl-300d-2M.vec.zip) from FastText. Put the file "crawl-300d-2M.vec" under the project directory.
@@ -113,6 +113,28 @@ python train_genea22.py
 ```
 
 The weights and logs can be found under the "output_directory". It takes roughly 20k~30k iterations to produce decent results.
+
+
+## Dyadic Gestures  
+We adapt the system to co-speech gesture generation in a dyadic setting (a main speaker and an interlocutor). 
+
+- The file dyadic_pairs.txt contains all speaker-interlocutor pairs using the same sequence key as the h5 files. 
+
+_Currently, we use the random sequence for the interlocutor. For test set, we use the sequence from val set. We also crop their lengths during data loading so both have the same length._ 
+
+- All hyperparameters are stored in Tacotron2/common/hparams_dyadic.py.
+
+- Predicting gestures for the main speaker: 
+```
+cd Tacotron2
+python generate_all_dyadic_gestures.py -ch CHECKPOINT_PATH
+```
+
+- Train the model for dyadic gesture generation using the following command:
+```
+cd Tacotron2
+python train_genea23.py
+```
 
 ## Citation 
 Please cite our paper if you find our code useful.
