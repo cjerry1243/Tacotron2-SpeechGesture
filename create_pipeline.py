@@ -9,7 +9,8 @@ import joblib as jl
 
 if __name__ == "__main__":
     parser = BVHParser()
-    parsed_data = parser.parse("dataset_v1/trn/bvh/trn_2022_v1_064.bvh")
+    # parsed_data = parser.parse("dataset_v1/trn/bvh/trn_2022_v1_064.bvh")
+    parsed_data = parser.parse("dataset_v1/trn/bvh/trn_2022_v1_002.bvh")
 
     mexp_full = Pipeline([
         ('jtsel', JointSelector(["b_root", "b_spine0", "b_spine1", "b_spine2", "b_spine3", "b_neck0", "b_head", "b_r_shoulder",
