@@ -3,7 +3,7 @@ This is the official repository for our [paper](https://openreview.net/forum?id=
 
 This repository provides the code for co-speech gesture prediction using the data from [GENEA Challenge 2022](https://youngwoo-yoon.github.io/GENEAchallenge2022/).
 
-This repository also contain the implementation for [GENEA Challenge 2023](https://genea-workshop.github.io/2023/challenge/).
+**This work is also the offical baseline for [GENEA Challenge 2023](https://genea-workshop.github.io/2023/challenge/).**
 
 ## Demonstration of Our Results (make sure the audio is on while playing!!) 
 https://user-images.githubusercontent.com/26675834/226152214-a4fc1b84-328b-4a22-828e-e8d2a69a2f89.mp4
@@ -118,23 +118,7 @@ The weights and logs can be found under the "output_directory". It takes roughly
 ## Dyadic Gestures  
 We adapt the system to co-speech gesture generation in a dyadic setting (a main speaker and an interlocutor). 
 
-- The file dyadic_pairs.txt contains all speaker-interlocutor pairs using the same sequence key as the h5 files. 
-
-_Currently, we use the random sequence for the interlocutor. For test set, we use the sequence from val set. We also crop their lengths during data loading so both have the same length._ 
-
-- All hyperparameters are stored in Tacotron2/common/hparams_dyadic.py.
-
-- Predicting gestures for the main speaker: 
-```
-cd Tacotron2
-python generate_all_dyadic_gestures.py -ch CHECKPOINT_PATH
-```
-
-- Train the model for dyadic gesture generation using the following command:
-```
-cd Tacotron2
-python train_genea23.py
-```
+Please refer to the [official baseline](https://github.com/genea-workshop/2023_ivi_baseline/) provided by GENEA23.
 
 ## Citation 
 Please cite our paper if you find our code useful.
